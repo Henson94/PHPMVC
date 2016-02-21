@@ -3,6 +3,8 @@
 //|应用程序初始化
 //|加载必要的数据
 //+-----------------
+namespace Mvc;
+
 class App {
   protected $controller;
   protected $model;
@@ -70,9 +72,11 @@ class App {
       touch(AppDir."/Lib/Controller/index.html");
       touch(AppDir."/Lib/Controller/IndexController.class.php");
 
-
       mkdir(AppDir."/Lib/Model");
       touch(AppDir."/Lib/Model/index.html");
+
+      mkdir(AppDir."Lib/View");
+      touch(AppDir."Lib/View/index.html");
     }
   }
 

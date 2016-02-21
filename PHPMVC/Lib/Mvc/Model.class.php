@@ -1,5 +1,5 @@
 <?php
-namespace MVC;
+namespace Mvc;
 
 class Model {
   public function __call($method, $args) {
