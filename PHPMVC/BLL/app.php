@@ -23,6 +23,7 @@ class App {
       include_once AppDir."/Common/function.php";
     }
   }
+
   /**
    *页面导航模型
    */
@@ -42,13 +43,14 @@ class App {
       $model = isset($_GET['a'])?ucfirst($_GET['a']) : "Index" ;
     }
     //判断控制器是否存在
-    if(@!class_exists($controller)) {
+    $nSController = "\\Lib\\Controller\\".$controller;
+    if(@!class_exists($nSController)) {
       exit($controller."控制器不存在！");
     }
-    $this->controller = $controller;
+    $this->controller = $nSController;
     $this->model = $model;
     //打开控制器
-    $controllerClass = new $controller();
+    $controllerClass = new $nSController();
     //执行操作
     $controllerClass->$model();
   }
