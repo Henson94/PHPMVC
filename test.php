@@ -1,4 +1,5 @@
 <?php
+/*
 if(!empty($_SERVER['PATH_INFO'])) {
   $parray = $_SERVER['PATH_INFO'];
   $url = $_SERVER['REQUEST_URI'];
@@ -10,4 +11,6 @@ if(!empty($_SERVER['PATH_INFO'])) {
 
 else {
   echo 'n';
-}
+}*/
+
+file_put_contents("11111.php", "hahahahahah");

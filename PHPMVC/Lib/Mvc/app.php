@@ -51,6 +51,11 @@ class App {
     }
     $this->controller = $nSController;
     $this->model = $model;
+
+    //声明系统变量 控制器名，操作名
+    define("CONTROLLER_NAME", str_replace('Controller', '', $controller));
+    define("ACTION_NAME", $model);
+
     //打开控制器
     $controllerClass = new $nSController();
     //执行操作
@@ -61,7 +66,7 @@ class App {
    *初始化项目目录
    */
   public function initAppDir() {
-    if(!file_exists(AppDir)) {
+    if(!is_dir(AppDir)) {
       mkdir(AppDir);
       touch(AppDir."/index.html");
       

@@ -43,4 +43,7 @@ function __autoload($className) {
   else if($className == "Session") {
     include "PHPMVC/Lib/Session.class.php";
   }
+  else {
+    include "PHPMVC/Lib/".$fileName;
+  }
 }
