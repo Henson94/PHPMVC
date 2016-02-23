@@ -11,6 +11,7 @@ class Template {
   private $parFile = NULL;    //编译后的文件
 
   public function __construct() {
+    echo C('CONFIG_TEST');
     //验证目录是否存在
     if(!is_dir(AppDir."/Lib/View/") || !is_dir(AppDir."/Runtime/Cache")) {
       exit("模板文件夹不存在或缓存文件夹不存在！");

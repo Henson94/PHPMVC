@@ -47,3 +47,18 @@ function __autoload($className) {
     include "PHPMVC/Lib/".$fileName;
   }
 }
+
+//+-------------------
+//|配置文件读取
+//+-------------------
+function C($name = '') {
+  $mvcConfig = include "PHPMVC/Conf/config.php";
+  $userConfig = include AppDir."/Conf/config.php";
+  $config = array_replace($mvcConfig, $userConfig);
+  if($name != '') {
+    return $config[$name];
+  }
+  else {
+    return $config;
+  }
+}
