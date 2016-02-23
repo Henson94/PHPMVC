@@ -8,9 +8,10 @@
     <div>
      hello I'Template;
      <br />
-     Name: <?php echo @$this->var['name']?>
+     Name: <?php echo $this->var['name']?>
      <br />
-     age:<?php echo @$this->var['age']?>
+     age:<?php echo $this->var['age']?>
+
     </div>
     </body>
 </html>

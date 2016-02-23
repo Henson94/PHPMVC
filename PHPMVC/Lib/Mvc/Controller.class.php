@@ -8,6 +8,7 @@ class Controller{
 
   public function __construct() {
     $this->view = new \Mvc\Template();
+    method_exists($this, 'initlize')? $this->initlize() : null;
   }
 
   public function assign($varS, $value) {
