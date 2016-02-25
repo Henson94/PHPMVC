@@ -4,7 +4,7 @@
 //+----------------
 
 function __autoload($className) {
-  //echo '《'.$className.'》';
+  echo '<p>《'.$className.'》</p>';
 
   $className = ltrim($className,"\\");
   $fileName = '';
@@ -17,9 +17,10 @@ function __autoload($className) {
     $fileName = str_replace('\\',DIRECTORY_SEPARATOR, $namespace).DIRECTORY_SEPARATOR;
     $fileName .= str_replace('_', DIRECTORY_SEPARATOR, $className).".class.php";
   }
+  echo $fileName;
 
   if(strpos($className, "Model") > 1) {
-    include AppDir."/Lib/Model/".$fileName;
+    include AppDir."/".$fileName;
   }
   else if($className == "Model") {
     include "PHPMVC/Lib/".$fileName;
@@ -52,13 +53,27 @@ function __autoload($className) {
 //|配置文件读取
 //+-------------------
 function C($name = '') {
+  $name = strtolower($name);
   $mvcConfig = include "PHPMVC/Conf/config.php";
   $userConfig = include AppDir."/Conf/config.php";
   $config = array_replace($mvcConfig, $userConfig);
+  $config = array_change_key_case($config);
   if($name != '') {
     return $config[$name];
   }
   else {
     return $config;
+  }
+}
+
+//+---------------
+//|创建模型
+//+---------------
+function M($model = '') {
+  if($model == '') {
+    
+  }else {
+    $IModel = "\\Lib\\Model\\".ucfirst($model)."Model";
+      return new $IModel(strtolower($model)."Model");
   }
 }

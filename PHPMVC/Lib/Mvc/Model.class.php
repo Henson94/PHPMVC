@@ -10,11 +10,12 @@ class Model {
   public $lastSql;
   public $error;
   protected $options = array();
+  public $db;
   /**
    *__call 方法实现连续操作
    */
   public function __call($method, $args) {
-    if(in_array(strtolower($method), array('where', 'order', 'limit', 'filed'), true) {
+    if(in_array(strtolower($method), array('where', 'order', 'limit', 'filed'), true)) {
       //连贯操作的实现
       $this->options[strtolower($method)] = $args[0];
       return $this;
@@ -26,19 +27,20 @@ class Model {
 
   public function __construct($tableName = '') {
     if(!empty($tableName)) {
-      $this->tableName = C("DB_TABLE_PREFIX").str_replace("Model", "", get_called_class());
+      $table = strtolower(str_replace('Model', '', substr(get_called_class(), strrpos(get_called_class(), "\\")+1)));
+      $this->tableName = C("DB_TABLE_PREFIX").$table;
     }
     else {
       $this->tableName = C("DB_TABLE_PREFIX").$tableName;
     }
-    new PdoDbConn();
+    $this->db = new Db();
+    //$this->db->exec("insert into $this->tableName(username, password) values('henson1', 'abc123')");
   }
 
   /**
-   *插入数据
+   *插入数据C
    */
-  public function create() {
-    $data = $this->options['data'];
+  public function create($data) {
     $field = null;
     $val = null;
     if($data) {
@@ -55,19 +57,122 @@ class Model {
       }
       $field = rtrim($field, ",");
       $val = rtrim($val, ",");
-      $this->sql = "insert into ". $this->tableName. "($field)". "values($val)";
+      $this->sql = "insert into ". $this->tableName. "($field)". " values($val)";
+      return $this->db->exec($this->sql);
     }
     else {
       exit("数据为空！");
     }
-    if($pdo = PdoDbConn::$PDOs) {
-      $rs = $pdo->prepare($this->sql);
-      return $rs->execute();
+  }
+  /**
+   *更新数据 U
+   */
+  public function update($data) {
+    if(array_key_exists("where", $this->options)) {
+      $where = " where ".$this->options['where'];
+      $sets = "";
+      foreach($data as $key => $value) {
+        if(is_string($value)) {
+          $value = "'$value'";
+        }
+        else {
+          $value = intval($value);
+        }
+        $sets .=  ", `".$key."`=". $value;
+      }
+      $sets = " set ".trim($sets, ',');
+      $this->sql = "update ".$this->tableName.$sets.$where;
+      return $this->db->exec($this->sql);
     }
     else {
-      $this->error = $pdo->errorInfo();
-      return false;
+      $this->error = "where 条件不能为空！";
     }
   }
+  /**
+   *读取数据
+   */
+  public function read() {
+    $where = '';
+    $field = '';
+    $order = '';
+    $limit = '';
+    if(array_key_exists('where', $this->options)) {
+      $where = " where ".$this->options['where'];
+    }
+    else {
+      $where = NULL;
+    }
+    if(array_key_exists('field', $this->options)) {
+      $field = $this->options['filed'];
+    }
+    else {
+      $field = " * ";
+    }
+    if(array_key_exists('order', $this->options)) {
+      $order = " order by ".$this->options['order'];
+    }
+    else {
+      $order = NULL;
+    }
+    if(array_key_exists('limit', $this->options)) {
+      $limit = " limit ".$this->options['limit'];
+    }
+    else {
+      $limit = NULL;
+    }
+    $this->sql = "select ".$field." from ".$this->tableName.$where.$order.$limit;
+    $this->db->exec($this->sql);
+    return $this->db->fetchAll();
+  }
+
+  /**
+   *读取一条数据
+   */
+  public function find() {
+    $where = '';
+    $field = '';
+    $order = '';
+    $limit = ' limit 0, 1 ';
+    if(array_key_exists('where', $this->options)) {
+      $where = " where ".$this->options['where'];
+    } else {
+      $where = NULL;
+    }
+    if(array_key_exists('filed', $this->options)) {
+      $field = $this->options['field'];
+    } else {
+      $field = " * ";
+    }
+    if(array_key_exists('order', $this->options)) {
+      $order = " order by".$this->options['order'];
+    } else {
+      $order = NULL;
+    }
+    $this->sql = "select ".$field." from ".$this->tableName.$where.$order.$limit;
+    $this->db->exec($this->sql);
+    return $this->db->fetch();
+  }
+
+  /**
+   *删除数据
+   */
+  public function delete() {
+    if(array_key_exists('where', $this->options)) {
+      $where = " where ".$this->options['where'];
+      $this->sql = "delete from {$this->tableName} ".$where;
+    }
+    else {
+      $this->error = "where 条件不能为空！";
+      return false;
+    }
+    return $this->db->exec($this->sql);
+  }
+  /**
+   ×最后执行的sql
+   */
+  public function getLastSql() {
+    return $this->sql;
+  }
+
 
 }

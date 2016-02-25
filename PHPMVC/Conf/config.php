@@ -4,10 +4,11 @@ return array(
   'CONFIG_TEST' => 'TEST',
 
   //数据库配置
-  'DB_HOST'         => '',
-  'DB_NAME'         => '',
-  'DB_USER'         => '',
-  'DB_PWD'          => '',
-  'DB_TABLE_PREFIX' => '',
+  'DB_HOST'         => 'localhost',
+  'DB_NAME'         => 'MVC',
+  'DB_USER'         => 'root',
+  'DB_PWD'          => 'gkim',
+  'DB_TABLE_PREFIX' => 'mvc_',
+  'DB_CHARSET' => 'utf-8',
 
 );
