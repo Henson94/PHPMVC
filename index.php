@@ -1,7 +1,13 @@
-<?php
-//声明项目目录
-define("AppDir", "./App");
+<?php 
+//入口文件
 
-//引入框架
-require "./PHPMVC/PHPMVC.php";
+//检测PHP环境
+if(version_compare(PHP_VERSION, '5.3.0', '<')) die('require PHP > 5.3.0!');
+
+//定义应用文件夹
+define('APP_DIR', './App/');
+
+//引入Mvc 框架的入口文件
+require './Mvc/Mvc.php';
+
 
